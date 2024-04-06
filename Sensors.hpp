@@ -5,11 +5,12 @@
 
 class Sensors {
 public:
+    Sensors(bool DEBUG);
     Sensors(int pulsePin = 2, int frameStartMin = 1750, int frameStartMax = 1900,
             int oneMin = 180, int oneMax = 220, int zeroMin = 85, int zeroMax = 125,
             bool DEBUG = false);
 
-    Sensors(bool DEBUG);
+
 
     int* getSensorData();
     void printSensors();

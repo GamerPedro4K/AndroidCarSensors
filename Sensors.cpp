@@ -26,6 +26,11 @@ Sensors::Sensors(bool DEBUG) : DEBUG(DEBUG){
 
 int* Sensors::getSensorData() {
     String packet = readPacket();
+    if (packet == ""){
+      Sensores[0] = -1;
+      delay(300);
+      return Sensores;
+    }
 
     int y = 0;
     for (int x = 0; x < 8; x++) {
@@ -78,23 +83,54 @@ void Sensors::orderSensors() {
 }
 
 String Sensors::readPacket() {
-    unsigned long pulseWidth = pulseIn(pulsePin, HIGH);
-    if (pulseWidth >= frameStartMin && pulseWidth <= frameStartMax) {
-        String packet = "";
-        while (true) {
-            pulseWidth = pulseIn(pulsePin, HIGH);
-            if (pulseWidth >= frameStartMin && pulseWidth <= frameStartMax) {
-                break; // End of packet
+    unsigned long pulseWidth;
+    int attempts = 0;
+    const int maxAttempts = 65;
+
+    // Wait for the start of frame
+    do {
+        pulseWidth = pulseIn(pulsePin, HIGH);
+        if (attempts >= maxAttempts) {
+            if (1/* DEBUG */) {
+                Serial.println("Max attempts reached. Unable to detect start of frame.");
             }
-            if (pulseWidth >= oneMin && pulseWidth <= oneMax) {
-                packet += '1';
-            } else if (pulseWidth >= zeroMin && pulseWidth <= zeroMax) {
-                packet += '0';
-            }
+            return "";
         }
-        packet = packet.substring(1);
-        return packet;
-    } else {
-        return "";
+        attempts++;
+    } while (!(pulseWidth >= frameStartMin && pulseWidth <= frameStartMax));
+
+    if (DEBUG) {
+        Serial.print("\n\nStart of frame detected: ");
+        Serial.println(pulseWidth);
     }
+
+    String packet = "";
+
+    // Read the packet
+    while (true) {
+        pulseWidth = pulseIn(pulsePin, HIGH);
+
+        if (pulseWidth >= frameStartMin && pulseWidth <= frameStartMax) {
+            // End of packet
+            if (DEBUG) {
+                Serial.println("End of packet detected.");
+            }
+            break;
+        }
+
+        if (pulseWidth >= oneMin && pulseWidth <= oneMax) {
+            packet += '1';
+        } else if (pulseWidth >= zeroMin && pulseWidth <= zeroMax) {
+            packet += '0';
+        }
+    }
+
+    if (DEBUG) {
+        Serial.print("Received packet: ");
+        Serial.println(packet);
+    }
+
+    return packet.substring(1);
 }
+
+

@@ -1,24 +1,17 @@
 #include "Sensors.hpp"
-#include "Headunit.hpp"
 #include "HeadunitSensors.hpp"
 
 HeadunitSensors headUnit;
-
 Sensors mySensors;
 
 void setup() {
     Serial.begin(38400);
-    mySensors = Sensors(true);
-
+    mySensors = Sensors();
 }
 
-
-
-
 void loop() {
-    // Get sensor data
+    //Get Sensor Data
     int* sensorData = mySensors.getSensorData();
-    headUnit.sendSensors(sensorData);
-
-    
+    if(sensorData[0] != -1)
+      headUnit.sendSensors(sensorData);
 }
