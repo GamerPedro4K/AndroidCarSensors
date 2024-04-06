@@ -10,73 +10,37 @@ void HeadunitSensors::sendSensors(int* Sensors) {
   sendSerialData(REAR_RADAR_INFO, RearSensors, sizeof(RearSensors) / sizeof(RearSensors[0]));
 }
 
-void HeadunitSensors::convertSensors(int* Sensors) {
-
-    //SENSOR A
-    if(Sensors[0] >=0 && Sensors[0] <= RearDASize-2){
-        Sensors[0] = RearDA[Sensors[0]];
-    }
-    else{
-        Sensors[0] = RearDA[RearDASize-1];
-    }
-
-    //SENSOR B
-    if(Sensors[1] >=0 && Sensors[1] <= RearCBSize-2){
-        Sensors[1] = RearCB[Sensors[1]];
-    }
-    else{
-        Sensors[1] = RearCB[RearCBSize-1];
-    }
-
-    //SENSOR C
-    if(Sensors[2] >=0 && Sensors[2] <= RearCBSize-2){
-        Sensors[2] = RearCB[Sensors[2]];
-    }
-    else{
-        Sensors[2] = RearCB[RearCBSize-1];
-    }
-
-
-    //SENSOR D
-    if(Sensors[3] >=0 && Sensors[3] <= RearDASize-2){
-        Sensors[3] = RearDA[Sensors[3]];
-    }
-    else{
-        Sensors[3] = RearDA[RearDASize-1];
-    }
-
-    //SENSOR E
-    if(Sensors[4] >=0 && Sensors[4] <= 11){
-        Sensors[4] = FrontEH[Sensors[4]];
-    }
-    else{
-        Sensors[4] = FrontEH[FrontEHSize-1];
-    }
-
-    //SENSOR F
-    if(Sensors[5] >=0 && Sensors[5] <= FrontGFSize-2){
-        Sensors[5] = FrontGF[Sensors[5]];
-    }
-    else{
-        Sensors[5] = FrontGF[FrontGFSize-1];
-    }
-    
-    //SENSOR G
-    if(Sensors[6] >=0 && Sensors[6] <= FrontGFSize-2){
-        Sensors[6] = FrontGF[Sensors[6]];
-    }
-    else{
-        Sensors[6] = FrontGF[FrontGFSize-1];
-    }
-
-    //SENSOR H
-    if(Sensors[7] >=0 && Sensors[7] <= FrontEHSize-2){
-        Sensors[7] = FrontEH[Sensors[7]];
-    }
-    else{
-        Sensors[7] = FrontEH[FrontEHSize-1];
+void HeadunitSensors::convertSensorValue(int& sensorValue, const int* sensorArray, int arraySize) {
+    // Convert the sensor value
+    if (sensorValue >= 0 && sensorValue <= arraySize - 2) {
+        sensorValue = sensorArray[sensorValue];
+    } else {
+        sensorValue = sensorArray[arraySize - 1];
     }
 }
+
+void HeadunitSensors::convertSensors(int* Sensors) {
+    // Convert rear sensors
+    // Sensor A
+    convertSensorValue(Sensors[0], RearDA, RearDASize);
+    // Sensor B
+    convertSensorValue(Sensors[1], RearCB, RearCBSize);
+    // Sensor C
+    convertSensorValue(Sensors[2], RearCB, RearCBSize);
+    // Sensor D
+    convertSensorValue(Sensors[3], RearDA, RearDASize);
+
+    // Convert front sensors
+    // Sensor E
+    convertSensorValue(Sensors[4], FrontEH, FrontEHSize);
+    // Sensor F
+    convertSensorValue(Sensors[5], FrontGF, FrontGFSize);
+    // Sensor G
+    convertSensorValue(Sensors[6], FrontGF, FrontGFSize);
+    // Sensor H
+    convertSensorValue(Sensors[7], FrontEH, FrontEHSize);
+}
+
 
 void HeadunitSensors::printSensors(int* Sensors) {
     Serial.println();
@@ -84,9 +48,6 @@ void HeadunitSensors::printSensors(int* Sensors) {
         Serial.print(String("\nSensor ") + String(char('A' + i)) + String(": ") + String(Sensors[i], HEX));
     }
 }
-
-
-
 
 //FRONT SENSORS H - (RIGHT) E - (LEFT)
 const int HeadunitSensors::FrontEH[FrontEHSize] = {

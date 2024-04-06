@@ -7,9 +7,10 @@ class HeadunitSensors : public HeadUnit{
     
     void sendSensors(int* Sensors);
     void printSensors(int* Sensors);
-    void convertSensors(int* Sensors);
       
   private:
+    void convertSensors(int* Sensors);
+    void convertSensorValue(int& sensorValue, const int* sensorArray, int arraySize);
 
     //FRONT SENSORS H - (RIGHT) E - (LEFT)
     static const int FrontEHSize = 12;
