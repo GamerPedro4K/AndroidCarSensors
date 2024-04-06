@@ -9,6 +9,8 @@ public:
             int oneMin = 180, int oneMax = 220, int zeroMin = 85, int zeroMax = 125,
             bool DEBUG = false);
 
+    Sensors(bool DEBUG);
+
     int* getSensorData();
     void printSensors();
 

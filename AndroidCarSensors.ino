@@ -7,76 +7,17 @@ Sensors mySensors;
 
 void setup() {
     Serial.begin(38400);
-    mySensors = Sensors();
+    mySensors = Sensors(true);
 }
 
 
 
-/* 
-FRONT
-10 - 0x00
-9  - 0x0C
-8  - 0x18
-7  - 0x24
-6  - 0x30
-5  - 0x3C
-4  - 0x48
-3  - 0x54
-2  - 0x60
-1  - 0x6C
-0  - 0x78
 
-FRONT
-8 - 0x00
-7 - 0x06
-6 - 0x0C
-5 - 0x18
-4 - 0x1D
-3 - 0x24
-2 - 0x2A
-1 - 0x36
-0 - 0x3C
-
-
-REAR
-10 - 0x00
-9  - 0x11
-8  - 0x21
-7  - 0x32
-6  - 0x42
-5  - 0x53
-4  - 0x63
-3  - 0x74
-2  - 0x84
-1  - 0x95
-0  - 0xA5
-
-REAR
-8 - 0x00
-7 - 0x05
-6 - 0x0C
-5 - 0x18
-4 - 0x1E
-3 - 0x24
-2 - 0x2A
-1 - 0x36
-0 - 0x3C
-
-8  - H
-10 - G
-10 - F
-8  - E
-
-8  - D
-10 - C
-10 - B
-8  - A
- */
 void loop() {
     // Get sensor data
     int* sensorData = mySensors.getSensorData();
 
-    for (int i = 0x00 ; i <= 0xff; i++) { // Assuming 'infanty' refers to 0xff
+    for (int i = 0x3C ; i <= 0xff; i) { // Assuming 'infanty' refers to 0xff
       byte dataByte[] = {i, i, i, i};
       headUnit.sendSerialData(FRONT_RADAR_INFO, dataByte, sizeof(dataByte) / sizeof(dataByte[0]));
 

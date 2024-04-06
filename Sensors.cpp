@@ -20,6 +20,9 @@ Sensors::Sensors(
     pinMode(pulsePin, INPUT);
 }
 
+Sensors::Sensors(bool DEBUG) : DEBUG(DEBUG){
+    pinMode(pulsePin, INPUT);
+}
 
 int* Sensors::getSensorData() {
     String packet = readPacket();
